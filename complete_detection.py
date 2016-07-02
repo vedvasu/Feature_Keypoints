@@ -1,3 +1,14 @@
+
+'''
+* File name: complete_detection.py
+* Author List: Ved Vasu Sharma
+* Classes created: CascadedDetector(), setupDetector()
+* Description: - This module aims at detecting parts of the body using inbuilt haarcascade files in openCV.
+               - Initially developed for face, nose and ears and can be extended by adding more keys.
+* Example Call: s = setupDetectors('file_name.jpg',detectorKey = 'face')     # key can be face, nose, eyes
+                cropped_parts = s.detect()  
+'''
+
 import cv2
 import numpy as np
 
