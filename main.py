@@ -14,8 +14,8 @@ face = cropped_parts[0]
 
 # Step 2 : Feature descriptor (Using Sift Feature)
 s = feature.SIFTFeatures()
-keyPoints = s.transform(face,None)
-print keyPoints
+keyPoints,descriptor = s.transform(face,None)
+print len(keyPoints)
 
 # Step 3 : Keypoints Filtering 					#Still to be implemented
 

@@ -1,8 +1,8 @@
 
 '''
 * File name: feature_detection.py
-* Author List: Ved Vasu Sharma
-* Classes created: SIFTFeatures(), ORBFeatures(), Operatio_On_Keypoints() 
+* Author List: Ved Vasu Sharma (logics copied from openCV dcumentation)
+* Classes created: SIFTFeatures(), ORBFeatures(), Operatio_On_Keypoints() ,matchingFeatures()
 * Description: - This module aims at identifying feature from an image using inbuilt feature detectors.
                - Initially developed using SIFT and ORB feature.
 * Example Call: s = SIFTFeatures()
@@ -15,7 +15,7 @@ from matplotlib import pyplot as plt
 
 np.set_printoptions(threshold=np.nan)                    # to view the large array in uncompressed form
 
-#f = open('results/output_test_image1_histogram.txt','w')
+#f = open('results/output_test_image1_histogram.txt','w')     # uncomment to save the output as .txt (output not printed on console)
 #sys.stdout = f
 
 class SIFTFeatures():
@@ -56,13 +56,43 @@ class ORBFeatures():                        ## Still to be implemented
         return kp,des
 
 
-class Operation_On_Keypoints():                   
+class operationsKeypoints():                   
 
-    def __init__(self,kp):
-        self.key_points = kp
+    '''
+    * Purpose of this class is to write codes for the operations not working in openCV
+    * New basic implementations on the keypoints
+    '''
 
-    def showKp(self,arr):
-        cv2.imshow('Key_point', self.key_points[arr])
+    def drawMatches(self,img1, kp1, img2, kp2, matches):
+
+        '''
+        * Alternate implementation for cv2.drawMatches function in openCV
+        * The keypoints which are matched intwo images are drawn(connected by a line) on the image formed by joining both images.
+        * The function returns out put image with drawn keypoints
+        '''
+        
+        ## New black image having max row of the both samples......that means images will be stacked horizontally
+        out = np.zeros((max([img1.shape[0],img2.shape[0]]),img1.shape[1]+img2.shape[1],3), dtype='uint8')
+
+        out[:img1.shape[0],:img1.shape[0]] = np.dstack([img1])      # sample pixels overwritten on new image
+        out[:img2.shape[0],img1.shape[0]:] = np.dstack([img2])
+
+        for m in matches:
+
+            img1_idx = m.queryIdx
+            img2_idx = m.trainIdx
+
+            (x1,y1) = kp1[img1_idx].pt                  # gives the location of the point (x,y) of the keypoint
+            (x2,y2) = kp2[img2_idx].pt
+
+            ## Figures are drawn
+            cv2.circle(out, (int(x1),int(y1)), 4, (255, 0, 255), 1)   
+            cv2.circle(out, (int(x2)+img1.shape[1],int(y2)), 4, (255, 0, 255), 1)
+
+            cv2.line(out, (int(x1),int(y1)), (int(x2)+img1.shape[1],int(y2)), (255, 0, 0), 1)
+
+        return out
+
 
 class matchingFeatures():
 
@@ -92,31 +122,15 @@ class matchingFeatures():
                 good.append(m)
 
         if len(good) > min_match:
-            src_pts = np.float32([ kp1[m.queryIdx].pt for m in good ]).reshape(-1,1,2)
-            dst_pts = np.float32([ kp2[m.trainIdx].pt for m in good ]).reshape(-1,1,2)
-
-            M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC,5.0)
-            matchesMask = mask.ravel().tolist()
-
-            h,w,t = self.img1.shape
-            pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
-            dst = cv2.perspectiveTransform(pts,M)
-
-            #self.img2 = cv2.polylines(self.img2,[np.int32(dst)],True,255,3)
+            
+            out = operationsKeypoints().drawMatches(self.img1,kp1,self.img2,kp2,good)
+            cv2.imshow('out',out)
 
         else:
             print "Not enough matches are found - %d/%d" % (len(good),min_match)
-            matchesMask = None
 
-        raw_params = dict(matchColor = (0,255,0), # draw matches in green color
-                   singlePointColor = None,
-                   matchesMask = matchesMask, # draw only inliers
-                   flags = 2)
+        return good
 
-        cv2.imshow('img2',self.img2)
-        img3 = cv2.drawMatches(img1,kp1,img2,kp2,good,None,**draw_params)
-
-        plt.imshow(img3, 'gray'),plt.show()
 
 #################################################### SIFT feature        
 # img = cv2.imread('samples/sample (7).jpg')
@@ -131,11 +145,9 @@ class matchingFeatures():
 # print keyPoints
 
 ##################################################### Matching Key_points
-s = matchingFeatures(img1_path = 'samples/sample (1).jpg',img2_path = 'samples/sample (8).jpg') 
-s.setup(min_match = 10)
+# s = matchingFeatures(img1_path = 'samples/sample (8).jpg',img2_path = 'samples/sample (1).jpg') 
+# matches = s.setup(min_match = 10)
 
-# sd = Operation_On_Keypoints(keyPoints)
-# sd.showKp(1)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
