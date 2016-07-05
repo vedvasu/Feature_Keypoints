@@ -23,10 +23,10 @@ class SIFTFeatures():
     '''
     * SIFT is scale invariant feature transform used to detect keypoints and its parameters
     * These parameters can be filtered depending upon
-   			- its (x,y) coordinates, 
-			- size of the meaningful neighbourhood, 
-			- angle which specifies its orientation, 
-			- response that specifies strength of keypoints etc.
+            - its (x,y) coordinates, 
+            - size of the meaningful neighbourhood, 
+            - angle which specifies its orientation, 
+            - response that specifies strength of keypoints etc.
     '''
     
     def __init__(self):
@@ -36,8 +36,8 @@ class SIFTFeatures():
         Y = X.copy()
         X = cv2.cvtColor(X,cv2.COLOR_BGR2GRAY)
         kp,des = self.siftDesc.detectAndCompute(X,mask)
-        img=cv2.drawKeypoints(Y,kp,flags=0)					# use flag = cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS
-        cv2.imshow('key',img)								# the orientation, and size of keypoint can be viewed with this flag
+        img=cv2.drawKeypoints(Y,kp,flags=0)                 # use flag = cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS
+        cv2.imshow('key',img)                               # the orientation, and size of keypoint can be viewed with this flag
         return kp,des
 
 
@@ -92,6 +92,16 @@ class operationsKeypoints():
             cv2.line(out, (int(x1),int(y1)), (int(x2)+img1.shape[1],int(y2)), (255, 0, 0), 1)
 
         return out
+    
+    def query2pointsConversion(self,kp):
+
+        points = []
+        for i in xrange(len(kp)):
+
+            (x,y) = kp[i].pt                  # gives the location of the point (x,y) of the keypoint
+            points.append([int(x),int(y)])
+        
+        return points
 
 
 class matchingFeatures():
@@ -125,6 +135,7 @@ class matchingFeatures():
             
             out = operationsKeypoints().drawMatches(self.img1,kp1,self.img2,kp2,good)
             cv2.imshow('out',out)
+            operationsKeypoints().query2pointsConversion(good,kp1)
 
         else:
             print "Not enough matches are found - %d/%d" % (len(good),min_match)
@@ -135,19 +146,21 @@ class matchingFeatures():
 #################################################### SIFT feature        
 # img = cv2.imread('samples/sample (7).jpg')
 # s = SIFTFeatures()
-# keyPoints = s.transform(img,None)
+# keyPoints, des = s.transform(img,None)
 # print keyPoints
 
 ###################################################### ORB feature
 # img = cv2.imread('samples/sample (7).jpg')
 # s = ORBFeatures()
-# keyPoints = s.transform(img,None)
+# keyPoints, des = s.transform(img,None)
 # print keyPoints
 
 ##################################################### Matching Key_points
 # s = matchingFeatures(img1_path = 'samples/sample (8).jpg',img2_path = 'samples/sample (1).jpg') 
 # matches = s.setup(min_match = 10)
 
+#################################################### Operations
+# points = operationsKeypoints().query2pointsConversion(keyPoints)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
