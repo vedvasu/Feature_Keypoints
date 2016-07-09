@@ -70,12 +70,12 @@ class operationsKeypoints():
         * The keypoints which are matched intwo images are drawn(connected by a line) on the image formed by joining both images.
         * The function returns out put image with drawn keypoints
         '''
-        
+              
         ## New black image having max row of the both samples......that means images will be stacked horizontally
         out = np.zeros((max([img1.shape[0],img2.shape[0]]),img1.shape[1]+img2.shape[1],3), dtype='uint8')
 
-        out[:img1.shape[0],:img1.shape[0]] = np.dstack([img1])      # sample pixels overwritten on new image
-        out[:img2.shape[0],img1.shape[0]:] = np.dstack([img2])
+        out[:img1.shape[0],:img1.shape[1]] = np.dstack([img1])      # sample pixels overwritten on new image
+        out[:img2.shape[0],img1.shape[1]:] = np.dstack([img2])
 
         for m in matches:
 
@@ -135,7 +135,6 @@ class matchingFeatures():
             
             out = operationsKeypoints().drawMatches(self.img1,kp1,self.img2,kp2,good)
             cv2.imshow('out',out)
-            operationsKeypoints().query2pointsConversion(good,kp1)
 
         else:
             print "Not enough matches are found - %d/%d" % (len(good),min_match)
@@ -156,7 +155,7 @@ class matchingFeatures():
 # print keyPoints
 
 ##################################################### Matching Key_points
-# s = matchingFeatures(img1_path = 'samples/sample (8).jpg',img2_path = 'samples/sample (1).jpg') 
+# s = matchingFeatures(img1_path = 'samples/sample (1).jpg',img2_path = 'samples/sample (8).jpg') 
 # matches = s.setup(min_match = 10)
 
 #################################################### Operations

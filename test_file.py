@@ -4,9 +4,9 @@ import numpy as np
 # mouse callback function
 def pixel_value(event,x,y,flags,param):
     if event == cv2.EVENT_LBUTTONDOWN:    # USE cv2.EVENT_MOUSEMOVE for continuous value display
-        print img[x,y]
+        print img[y,x]
 
-img = cv2.imread('samples/sample (1).jpg')
+img = cv2.imread('samples/sample (9).jpg')
 cv2.namedWindow('image')
 cv2.setMouseCallback('image',pixel_value)
 
