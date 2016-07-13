@@ -1,20 +1,22 @@
+
 import cv2
 import numpy as np
+
 import complete_detection as roi
+
 import feature_detection as feature
-
+''' '''
 # Input Image
-path = 'samples/sample (10).jpg'
-img = cv2.imread('samples/sample (9).jpg')
-
+path = 'samples/sample (2).jpg'
+img = cv2.imread(path)
 
 # Step 1 : Extraction of face from the image (Region of Interest) 
 s = roi.setupDetectors(path,detectorKey = 'face')     # key can be face, nose, eyes
 cropped_parts = s.detect()
-if len(cropped_parts) == 0:
-	face = img
-else:
+if cropped_parts != []:
 	face = cropped_parts[0]
+else:
+	face = img
 faceCopy = face.copy()
 
 
@@ -35,5 +37,6 @@ for i in xrange(len(points)):
 
 cv2.imshow('face',faceCopy)
 
-
 cv2.waitKey(0)
+
+cv2.destroyAllWindows()
