@@ -161,5 +161,5 @@ class matchingFeatures():
 #################################################### Operations
 # points = operationsKeypoints().query2pointsConversion(keyPoints)
 
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+#cv2.waitKey(0)
+#cv2.destroyAllWindows()
