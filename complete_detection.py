@@ -63,37 +63,35 @@ class setupDetectors():
     def detect(self):
 
         if self.key == 'face':
-            detector = CascadedDetector(cascade_fn="haarcascades\haarcascade_frontalface_alt2.xml")      
-            for i,r in enumerate(detector.detect(self.img)):
-                x0,y0,x1,y1 = r
-                cv2.rectangle(self.imgOut, (x0,y0),(x1,y1),(0,255,0),1)
-                
-                face = self.imgOut[y0:y1,x0:x1]
+            face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_alt2.xml')
+            faces = face_cascade.detectMultiScale(self.img, 1.3, 5)
+            for (x,y,w,h) in faces:
+                face = self.imgOut[y:y+h, x:x+w]
                 self.crop.append(face)
                 #cv2.imwrite('face['+str(j)+'].jpg',face)
 
         if self.key == 'nose':
-            noseDetector = CascadedDetector(scaleFactor=1.1,minNeighbors=5, minSize=(20,20), cascade_fn="haarcascades\haarcascade_mcs_nose.xml")            
-
-            for i,r in enumerate(noseDetector.detect(self.img)):
-                fx0,fy0,fx1,fy1 = r
-                cv2.rectangle(self.imgOut, (fx0,fy0),(fx1,fy1),(255,0,0),1)
-                
-                nose = self.imgOut[fy0:fy1,fx0:fx1]
+            nose_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_mcs_nose.xml')
+            noses = nose_cascade.detectMultiScale(self.img, 1.3, 5)
+            for (x1,y1,w1,h1) in noses:
+                nose = self.imgOut[y1:y1+h1,x1:x1+w1]
                 self.crop.append(nose)
                 #cv2.imwrite('nose['+str(j)+'].jpg',nose)
 
         if self.key == 'eyes':
-            eyesDetector = CascadedDetector(scaleFactor=1.1,minNeighbors=5, minSize=(20,20), cascade_fn="haarcascades\haarcascade_eye.xml")
-
-
-            for j,r1 in enumerate(eyesDetector.detect(self.img)):
-                ex0,ey0,ex1,ey1 = r1
-                cv2.rectangle(self.imgOut, (ex0,ey0),(ex1,ey1),(0,255,0),1)
-                
-                eye = self.imgOut[ey0:ey1,ex0:ex1]
+            eye_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_eye.xml')
+            eyes = eye_cascade.detectMultiScale(self.img, 1.3, 5)
+            for (x2,y2,w2,h2) in eyes:
+                eye = self.imgOut[y2:y2+h2,x2:x2+w2]
                 self.crop.append(eye)
-                #cv2.imwrite('eye['+str(j)+'].jpg',eye)
+                #cv2.imwrite('eye['+str(j)+'].jpg',eye)i
+        
+        if self.key == 'mouth':
+            mouth_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_mcs_mouth.xml')
+            mouth = mouth_cascade.detectMultiScale(self.img, 1.3, 5)
+            for (x3,y3,w3,h3) in mouth:
+                mouth_ = self.imgOut[y3:y3+h3,x3:x3+w3]
+                self.crop.append(mouth_)
 
         #cv2.imshow('Output',self.imgOut)
         
@@ -102,11 +100,12 @@ class setupDetectors():
 
 #### Main Program ########
 
-# s = setupDetectors('samples/sample (1).jpg',detectorKey = 'face')     # key can be face, nose, eyes
-# cropped_parts = s.detect()
+#s = setupDetectors('samples/sample (3).jpg',detectorKey = 'face')     # key can be face, nose, eyes
+#cropped_parts = s.detect()
 
-# if cropped_parts != []:
-#     cv2.imshow('detection',cropped_parts[0])
+#if cropped_parts != []:
+#    cv2.imshow('detection',cropped_parts[0])
 
 
-cv2.waitKey(0)
+#cv2.waitKey(0)
+#cv2.destroyAllWindows()
