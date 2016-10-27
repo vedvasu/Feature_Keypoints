@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import math
 
-def histogramEquilisation(img,rev = True):
+def histogramEquilisation(img,rev = False):
 	
 	histogram = {}
 	output = np.zeros((img.shape[0],img.shape[1]),np.uint8)
@@ -35,7 +35,7 @@ def histogramEquilisation(img,rev = True):
 	return output
 
 
-for sample in range(24,25):
+for sample in range(1,2):
 
 	img = cv2.imread('sample_low_contrast/'+str(sample)+'.jpg')
 	img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)

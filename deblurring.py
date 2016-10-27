@@ -1,7 +1,7 @@
 import cv2
 import numpy
 
-img = cv2.imread('cameraman.tif')
+img = cv2.imread('sample_low_contrast/2.jpg')
 
 blur = cv2.blur(img,(5,5))
 

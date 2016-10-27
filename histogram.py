@@ -2,7 +2,8 @@ import cv2
 import numpy as np
 import math
 
-img = cv2.imread('cameraman.tif',0)
+img = cv2.imread('sample_low_contrast/23.jpg',0)
+img = cv2.resize(img,(640,480))
 img1 = cv2.imread('lion.tif')
 img2 = cv2.imread('fruits.tif')
 
